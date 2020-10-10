@@ -11,7 +11,7 @@ const courses = [
 ];
 
 app.get("/", function (req, res) {
-  res.send("Hello World");
+  res.send(courses);
 });
 
 app.get("/api/courses", function (req, res) {
@@ -41,6 +41,7 @@ app.put("/api/courses/:id", function (req, res) {
   const course = courses.find((c) => c.id === parseInt(req.params.id));
   if (!course) {
     res.status(404).send("The cours not faund");
+    return;
   }
   const { error } = validateCourse(req.body);
   if (error) {
@@ -66,3 +67,13 @@ function validateCourse(course) {
   };
   return Joi.validate(course, schema);
 }
+
+app.delete("/api/courses/:id", function (req, res) {
+  const course = courses.find((c) => c.id === parseInt(req.params.id));
+  if (!course) {
+    res.status(404).send("The cours not faund");
+  }
+  const index = courses.indexOf(course);
+  courses.splice(index, 1);
+  res.send(course);
+});
