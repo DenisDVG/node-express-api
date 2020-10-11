@@ -1,8 +1,29 @@
+// console.log('');
+const helmet = require("helmet");
+var morgan = require('morgan');
 const Joi = require("joi");
+const logger = require("./logger");
 const express = require("express");
 const app = express();
 
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`env: ${app.get('env')}`);
+
+
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use(express.static('public'));
+app.use(helmet());
+if (app.get('env') === 'development') {
+  app.use(morgan('tiny'));
+  console.log('morgan in development');
+}
+
+app.use(logger);
+app.use(function(req, res, next) {
+  console.log('Authentication...');
+  next();
+});
 
 const courses = [
   { id: 1, name: "course1" },
