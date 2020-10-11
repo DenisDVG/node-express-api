@@ -1,0 +1,6 @@
+{
+    "name": "node-express-api-prod",
+    "mail": {
+        "host": "prod-mail-server"
+    }
+}

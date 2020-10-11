@@ -1,0 +1,6 @@
+{
+    "name": "node-express-api-dev",
+    "mail": {
+        "host": "dev-mail-server"
+    }
+}
