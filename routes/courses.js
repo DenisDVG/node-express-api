@@ -67,8 +67,8 @@ router.post("/", async function (req, res) {
   res.send(result);
 });
 
-router.put("/:id", function (req, res) {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
+router.put("/:id", async function (req, res) {
+  const course = await getCourseById(req.params.id);
   if (!course) {
     res.status(404).send("The cours not faund");
     return;
@@ -78,17 +78,18 @@ router.put("/:id", function (req, res) {
     res.status(404).send(error);
     return;
   }
+
+  course.isPublished = true;
   course.name = req.body.name;
-  res.send(course);
+  const result = await course.save();
+  res.send(result);
 });
 
-router.delete("/:id", function (req, res) {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
+router.delete("/:id", async function (req, res) {
+  const course = await Course.findByIdAndRemove(id);
   if (!course) {
     res.status(404).send("The cours not faund");
   }
-  const index = courses.indexOf(course);
-  courses.splice(index, 1);
   res.send(course);
 });
 
