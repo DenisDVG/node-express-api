@@ -2,13 +2,42 @@ const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
 
-const courses = [
-  { id: 1, name: "course1" },
-  { id: 2, name: "course2" },
-  { id: 3, name: "course3" },
-];
+const mongoose = require("mongoose");
 
-router.get("/", function (req, res) {
+const courseSchema = new mongoose.Schema({
+  _id: String,
+  name: {type: String, required: true},
+  author: String,
+  tags: {type: Array,
+  validate: {
+    isAsync: true,
+    validator: function(v, callback) {
+      setTimeout(() => {
+        const res = v && v.lenghth > 0
+        callback(res);
+      }, 4000);
+    }
+  }},
+  date: { type: Date, default: Date.now },
+  isPublished: Boolean,
+  price: {
+    type: Number,
+    required: function() {return this.isPublished;}
+  }
+});
+
+const Course = mongoose.model('Course', courseSchema);
+
+async function getCourse() {
+  const courses = await Course
+  .find();
+  // console.log(courses);
+  return courses;
+}
+
+
+router.get("/", async function (req, res) {
+  const courses = await getCourse();
   res.send(courses);
 });
 

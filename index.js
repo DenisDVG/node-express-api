@@ -1,4 +1,5 @@
 // console.log('');
+const mongoose = require("mongoose");
 const config = require('config');
 const helmet = require("helmet");
 const startupDebugger = require('debug')('app:startup');
@@ -9,6 +10,10 @@ const courses = require("./routes/courses");
 const home = require("./routes/home");
 const express = require("express");
 const app = express();
+mongoose
+  .connect("mongodb://localhost/mongo-exercises")
+  .then(() => console.log("mongodb mongo-exercises connect"))
+  .catch((err) => console.error("error", err));
 
 app.set('view engine', 'pug');
 app.set('views', './views')
